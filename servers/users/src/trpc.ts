@@ -2,6 +2,7 @@ import { initTRPC, TRPCError, inferAsyncReturnType } from '@trpc/server';
 import { CreateExpressContextOptions } from '@trpc/server/adapters/express';
 import { OpenApiMeta } from 'trpc-openapi';
 import { prisma } from '../../../db/index';
+import { env } from './config/env';
 
 export const createContext = async ({
   req, // express request
@@ -46,7 +47,7 @@ const t = initTRPC
     errorFormatter: ({ error, shape }) => {
       if (
         error.code === 'INTERNAL_SERVER_ERROR' &&
-        process.env.NODE_ENV === 'production'
+        env.NODE_ENV === 'production'
       ) {
         return {
           ...shape,
@@ -70,7 +71,7 @@ const isAuthed = t.middleware(async ({ next, ctx }) => {
       select: {
         id: true,
         name: true,
-      }
+      },
     });
     if (!user) {
       throw new TRPCError({ code: 'UNAUTHORIZED' });
@@ -84,7 +85,7 @@ const isAuthed = t.middleware(async ({ next, ctx }) => {
       user: {
         token: user.id,
         name: user.name,
-      }
+      },
     },
   });
 });

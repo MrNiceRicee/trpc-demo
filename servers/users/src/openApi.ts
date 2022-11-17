@@ -7,6 +7,6 @@ export const openApiDocument = generateOpenApiDocument(appRouter, {
   title: 'Example CRUD API',
   description: 'OpenAPI compliant REST API built using tRPC with Express',
   version: '1.0.0',
-  baseUrl: 'http://localhost:8081/api',
+  baseUrl: 'http://localhost:8080/api',
   tags: ['users', 'posts'],
 });

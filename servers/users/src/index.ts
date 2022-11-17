@@ -5,8 +5,7 @@ import swaggerUi from 'swagger-ui-express';
 import { openApiDocument } from './openApi';
 import { createContext } from './trpc';
 import { appRouter } from './server';
-
-const PORT = process.env.PORT || 8081;
+import { env } from './config/env';
 
 const main = async () => {
   const app = express();
@@ -18,6 +17,9 @@ const main = async () => {
 
   // logger
   app.use((req, res, next) => {
+    if (env.NODE_ENV !== 'development') {
+      return next();
+    }
     const start = Date.now();
     console.log(
       '📥',
@@ -52,8 +54,12 @@ const main = async () => {
   app.use('/', swaggerUi.serve);
   app.get('/', swaggerUi.setup(openApiDocument));
 
-  app.listen(PORT, () => {
-    console.log(`🚀 Server ready at http://localhost:${PORT}`);
+  app.use((req, res) => {
+    res.status(501).send('😭 Not implemented');
+  });
+
+  app.listen(env.PORT, () => {
+    console.log(`🚀 Server ready at http://localhost:${env.PORT}`);
   });
 };
 
