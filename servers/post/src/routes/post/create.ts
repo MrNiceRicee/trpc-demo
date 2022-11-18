@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { protectedProcedure } from '../../trpc';
-import { TRPCError } from '@trpc/server';
 
 const createPost = protectedProcedure
   .meta({
@@ -15,7 +14,7 @@ const createPost = protectedProcedure
   })
   .input(
     z.object({
-      content: z.string().min(1),
+      content: z.string().min(1).max(128),
     })
   )
   .output(
