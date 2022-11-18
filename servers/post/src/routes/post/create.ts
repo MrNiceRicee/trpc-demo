@@ -5,7 +5,7 @@ const createPost = protectedProcedure
   .meta({
     openapi: {
       method: 'POST',
-      path: '/posts',
+      path: '/',
       summary: 'Create post',
       description: 'Create post',
       protect: true,

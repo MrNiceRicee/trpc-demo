@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import { createExpressMiddleware } from '@trpc/server/adapters/express';
 import { createOpenApiExpressMiddleware } from 'trpc-openapi';
 import swaggerUi from 'swagger-ui-express';
 import { openApiDocument } from './openApi';
@@ -37,14 +38,14 @@ const main = async () => {
   // handle incoming tRPC request
   app.use(
     '/api/trpc',
-    createOpenApiExpressMiddleware({
+    createExpressMiddleware({
       createContext,
       router: appRouter,
     })
   );
   // handle incoming OpenAPI request
   app.use(
-    '/api',
+    '/api/users',
     createOpenApiExpressMiddleware({
       createContext,
       router: appRouter,

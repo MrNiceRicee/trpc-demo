@@ -7,7 +7,7 @@ const userRouter = router({
     .meta({
       openapi: {
         method: 'GET',
-        path: '/users/{username}',
+        path: '/{username}',
         summary: 'Get user info',
         description: 'Get user info',
         tags: ['users'],
@@ -46,10 +46,9 @@ const userRouter = router({
     .meta({
       openapi: {
         method: 'POST',
-        path: '/users',
+        path: '/',
         summary: 'Create user',
         description: 'Create user',
-        protect: true,
         tags: ['users'],
       },
     })
@@ -111,7 +110,7 @@ const userRouter = router({
     .meta({
       openapi: {
         method: 'PUT',
-        path: '/users',
+        path: '/',
         summary: 'Update user',
         description: 'Update user',
         protect: true,
@@ -179,7 +178,7 @@ const userRouter = router({
     .meta({
       openapi: {
         method: 'GET',
-        path: '/users',
+        path: '/',
         summary: 'Get users',
         description: 'Get users',
         tags: ['users'],
@@ -205,10 +204,10 @@ const userRouter = router({
       const users = await ctx.prisma.user.findMany({
         where: {
           name: {
-            contains: input.name,
+            contains: input.name || '',
           },
           username: {
-            contains: input.username,
+            contains: input.username || '',
           },
         },
         select: {

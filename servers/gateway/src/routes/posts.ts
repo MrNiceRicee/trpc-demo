@@ -3,29 +3,29 @@ import httpProxy from 'http-proxy';
 import { env } from '../config/env';
 
 const proxy = httpProxy.createProxyServer();
-const userRouter = Router();
+const postRouter = Router();
 
 // api calls
-userRouter.all('/api/users*', (req, res) => {
+postRouter.all('/api/posts*', (req, res) => {
   console.log(
     '🚗',
-    'Proxying request to users server',
-    `${env.SERVICE_USERS_URL}${req.url}`
+    'Proxying request to post server',
+    `${env.SERVICE_POSTS_URL}${req.url}`
   );
   proxy.web(req, res, {
-    target: `${env.SERVICE_USERS_URL}`,
+    target: `${env.SERVICE_POSTS_URL}`,
   });
 });
 // trpc calls
-userRouter.all('/api/trpc/users*', (req, res) => {
+postRouter.all('/api/trpc/posts*', (req, res) => {
   console.log(
     '🚗',
     'Proxying request to users server',
-    `${env.SERVICE_USERS_URL}${req.url}`
+    `${env.SERVICE_POSTS_URL}${req.url}`
   );
   proxy.web(req, res, {
-    target: `${env.SERVICE_USERS_URL}`,
+    target: `${env.SERVICE_POSTS_URL}`,
   });
 });
 
-export { userRouter };
+export { postRouter };

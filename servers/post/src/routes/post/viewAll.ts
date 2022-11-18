@@ -10,7 +10,7 @@ const viewAll = publicProcedure
   .meta({
     openapi: {
       method: 'GET',
-      path: '/posts',
+      path: '/',
       summary: 'Get all posts',
       description: 'Get all posts',
       tags: ['posts'],

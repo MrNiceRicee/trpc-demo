@@ -5,8 +5,6 @@ import { z } from 'zod';
 const envSchema = z.object({
   PORT: z.string(),
   NODE_ENV: z.enum(['production', 'development']).default('development'),
-  SERVICE_USERS_URL: z.string(),
-  SERVICE_POSTS_URL: z.string(),
 });
 
 const formatZodError = (error: z.ZodError) => {

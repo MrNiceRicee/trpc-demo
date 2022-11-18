@@ -1,28 +1,20 @@
-import { inferAsyncReturnType, initTRPC } from '@trpc/server';
-import { CreateExpressContextOptions } from '@trpc/server/adapters/express';
-import { OpenApiMeta } from 'trpc-openapi';
-import { appRouter as userRouter } from '../../users/src/server';
+import { initTRPC } from '@trpc/server';
 
-const t = initTRPC
-  .context<any>()
-  .meta<OpenApiMeta>()
-  .create({
-    errorFormatter: ({ error, shape }) => {
-      return shape;
-    },
-  });
+const t = initTRPC.create();
 
-export const createContext = async ({
-  req,
-  res,
-}: CreateExpressContextOptions) => {
-  return { req, res };
-};
+import {
+  AppRouter as UserRouter,
+  appRouter as userRouter,
+} from '../../users/src/server';
+import {
+  AppRouter as PostRouter,
+  appRouter as postRouter,
+} from '../../post/src/server';
 
-export type Context = inferAsyncReturnType<typeof createContext>;
-
-export const appRouter = t.router({
-  user: userRouter,
-});
-
-export type AppRouter = typeof appRouter;
+// const appRouter = t.router({
+//   users: userRouter,
+//   posts: postRouter,
+// });
+// const appRouter = {...userRouter, ...postRouter};
+export type AppRouter = UserRouter & PostRouter;
+// export type AppRouter = typeof appRouter;

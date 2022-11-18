@@ -1,15 +1,19 @@
 import express from 'express';
 import cors from 'cors';
+import { createExpressMiddleware } from '@trpc/server/adapters/express';
+import { createOpenApiExpressMiddleware } from 'trpc-openapi';
+import swaggerUi from 'swagger-ui-express';
+import { openApiDocument } from './openApi';
+import { createContext } from './trpc';
+import { appRouter } from './server';
 import { env } from './config/env';
-import { userRouter } from './routes/users';
-import { postRouter } from './routes/posts';
 
 const main = async () => {
   const app = express();
   app.use(cors());
 
   app.get('/health', (req, res) => {
-    res.send('🤖 ok');
+    res.send('ok');
   });
 
   // logger
@@ -31,10 +35,27 @@ const main = async () => {
     });
   });
 
-  app.use(userRouter);
-  app.use(postRouter);
+  // handle incoming tRPC request
+  app.use(
+    '/api/trpc',
+    createExpressMiddleware({
+      createContext,
+      router: appRouter,
+    })
+  );
+  // handle incoming OpenAPI request
+  app.use(
+    '/api/posts',
+    createOpenApiExpressMiddleware({
+      createContext,
+      router: appRouter,
+    })
+  );
 
-  app.use((_, res) => {
+  app.use('/', swaggerUi.serve);
+  app.get('/', swaggerUi.setup(openApiDocument));
+
+  app.use((req, res) => {
     res.status(501).send('😭 Not implemented');
   });
 
