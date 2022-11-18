@@ -188,6 +188,7 @@ const userRouter = router({
       z.object({
         users: z.array(
           z.object({
+            id: z.string(),
             name: z.string(),
             username: z.string(),
           })
@@ -211,6 +212,7 @@ const userRouter = router({
           },
         },
         select: {
+          id: true,
           name: true,
           username: true,
         },
