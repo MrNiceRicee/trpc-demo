@@ -28,7 +28,7 @@ function CreatePost() {
 
     and then display JSX based on the error
   */
-  const formatTRPCErrorMessage = (error: string) => {
+  const formatTRPCErrorMessage = (error: string, code: number | undefined) => {
     try {
       const parsedError = JSON.parse(error);
       const formattedError = parsedError.reduce((acc: any, curr: any) => {
@@ -37,21 +37,21 @@ function CreatePost() {
       }, {});
       return formattedError as Record<string, string>;
     } catch (err) {
-      console.log(error);
-      // case insensitive check for "unauthorized" error
-      if (error.toLowerCase().includes('unauthorized')) {
+      // check if unauthorized
+      if (code === 401) {
         return {
-          error: 'unauthorized action. you must be logged in to create a post',
+          content: 'You must be logged in to create a post',
         };
       }
+      // will only go here if the error is not a zod error
       return {
         error: 'Unknown Error',
       };
     }
   };
 
-  const displayError = (error: string) => {
-    const errors = formatTRPCErrorMessage(error);
+  const displayError = (error: string, status: number | undefined) => {
+    const errors = formatTRPCErrorMessage(error, status);
     return Object.keys(errors).map((key) => {
       return (
         <p key={key} className="text-red-500">
@@ -119,10 +119,14 @@ function CreatePost() {
       >
         <div className="flex items-center justify-between rounded-sm bg-white/80 p-2 bg-blend-color-dodge">
           <span
-          // wrap to new line if error is too long
-            className="text-red-500 text-sm break-words w-96"
+            // wrap to new line if error is too long
+            className="w-96 break-words text-sm text-red-500"
           >
-            {createPost.error && displayError(createPost.error.message)}
+            {createPost.error &&
+              displayError(
+                createPost.error.message,
+                createPost.error.data?.httpStatus
+              )}
           </span>
         </div>
       </div>
