@@ -36,8 +36,17 @@ function CreatePost() {
         return acc;
       }, {});
       return formattedError as Record<string, string>;
-    } catch (error) {
-      return {};
+    } catch (err) {
+      console.log(error);
+      // case insensitive check for "unauthorized" error
+      if (error.toLowerCase().includes('unauthorized')) {
+        return {
+          error: 'unauthorized action. you must be logged in to create a post',
+        };
+      }
+      return {
+        error: 'Unknown Error',
+      };
     }
   };
 
@@ -109,7 +118,12 @@ function CreatePost() {
         ${createPost.error ? 'block' : 'hidden'}`}
       >
         <div className="flex items-center justify-between rounded-sm bg-white/80 p-2 bg-blend-color-dodge">
-          {createPost.error && displayError(createPost.error.message)}
+          <span
+          // wrap to new line if error is too long
+            className="text-red-500 text-sm break-words w-96"
+          >
+            {createPost.error && displayError(createPost.error.message)}
+          </span>
         </div>
       </div>
     </div>
